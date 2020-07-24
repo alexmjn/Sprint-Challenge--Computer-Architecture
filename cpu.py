@@ -7,6 +7,7 @@ SUB = 0b10100001
 MUL = 0b10100010
 DIV = 0b10100011
 MOD = 0b10100100
+ADDI = 0b10110000 # add a value to a register
 
 CMP = 0b10100111 #00000aaa 00000bbb
 
@@ -56,6 +57,7 @@ class CPU:
             POP: self.pop,
             PUSH: self.push,
             ADD: self.add,
+            ADDI: self.addi,
             SUB: self.sub,
             MUL: self.mul,
             DIV: self.div,
@@ -109,6 +111,9 @@ class CPU:
 
     def mod(self, op_a, op_b):
         self.reg[op_a] %= self.reg[op_b]
+
+    def addi(self, reg_a, op_b):
+        self.reg[reg_a] += op_b
 
     def call(self, reg_num):
         address = self.reg[reg_num]
