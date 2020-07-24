@@ -108,6 +108,7 @@ class CPU:
         self.pc = return_address
 
     def comp(self, reg_a, reg_b):
+        """Compares two registers' values and sets the equality flag"""
         self.FL = [0] * 8
         if self.reg[reg_a] == self.reg[reg_b]:
             self.FL[-1] = 1
@@ -117,7 +118,9 @@ class CPU:
             self.FL[-3] = 1
 
     def jmp(self, reg_num):
+        """Moves to a specific spot in the program counter."""
         self.pc = self.reg[reg_num]
+        # offsets run()'s autoincrement after the command is performed
         self.pc -= 2
 
     def jeq(self, reg_num):
@@ -186,14 +189,11 @@ class CPU:
         reads memory address and stores result in IR
         """
         self.IR = self.ram_read(self.pc)
-        print("first IR", bin(self.IR))
         operand_a = self.ram_read(self.pc + 1)
         operand_b = self.ram_read(self.pc + 2)
 
         while self.IR != HLT:
-            print("while loop IR", bin(self.IR))
             num_arguments = ((self.IR & 0b11000000) >> 6)
-
 
             if num_arguments == 0:
                 self.branch_table[self.IR]
@@ -204,15 +204,7 @@ class CPU:
             else:
                 self.branch_table[self.IR](operand_a, operand_b)
 
-            print("registers", self.reg)
-            print("flags", self.FL)
-            print("first program counter", self.pc)
-            if self.IR == HLT:
-                break
             self.pc += (num_arguments + 1)
-            print("iterated prog counter", self.pc)
             self.IR = self.ram_read(self.pc)
-
-            print("new IR", bin(self.IR))
             operand_a = self.ram_read(self.pc + 1)
             operand_b = self.ram_read(self.pc + 2)

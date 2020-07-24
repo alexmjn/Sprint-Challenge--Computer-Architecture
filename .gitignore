@@ -1,0 +1,12 @@
+__pycache__/cpu.cpython-37.pyc
+examples/in_and_out.py
+examples/sctest2.ls8
+examples/mult.ls8
+examples/interrupts.ls8
+examples/print8.ls8
+examples/printstr.ls8
+examples/stackoverflow.ls8
+examples/stack.ls8
+examples/keyboard.ls8
+examples/call.ls8
+sctest.ls8
