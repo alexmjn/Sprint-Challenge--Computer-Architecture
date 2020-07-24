@@ -14,6 +14,13 @@ JMP = 0b01010100 #00000rrr
 JEQ = 0b01010101 #00000rrr
 JNE = 0b01010110 #00000rrr
 
+AND = 0b10101000 #bitwise AND, store in reg a
+OR = 0b10101010
+XOR = 0b10101011
+NOT = 0b01101001 # bitwise NOT;
+SHL = 0b10101100 # bitwise left shift of reg a by operand b
+SHR = 0b10101101 # bitwise right shift of reg a by operand b
+
 INC = 0b01100101
 DEC = 0b01100110
 
@@ -58,6 +65,13 @@ class CPU:
             CMP: self.comp,
             JEQ: self.jeq,
             JNE: self.jne,
+            MOD: self.mod,
+            AND: self.bitwiseand,
+            OR: self.bitwiseor,
+            XOR: self.bitwisexor,
+            NOT: self.bitwisenot,
+            SHL: self.shl,
+            SHR: self.shr
         }
 
     def hlt(self):
@@ -92,6 +106,9 @@ class CPU:
 
     def div(self, op_a, op_b):
         self.reg[op_a] /= self.reg[op_b]
+
+    def mod(self, op_a, op_b):
+        self.reg[op_a] %= self.reg[op_b]
 
     def call(self, reg_num):
         address = self.reg[reg_num]
@@ -130,6 +147,26 @@ class CPU:
     def jne(self, reg_num):
         if self.FL[-1] != 1:
             self.jmp(reg_num)
+
+    def bitwiseand(self, reg_a, reg_b):
+        self.reg[reg_a] = self.reg[reg_a] & self.reg[reg_b]
+
+    def bitwiseor(self, reg_a, reg_b):
+        self.reg[reg_a] = self.reg[reg_a] | self.reg[reg_b]
+
+    def bitwisexor(self, reg_a, reg_b):
+        self.reg[reg_a] = self.reg[reg_a] ^ self.reg[reg_b]
+
+    def bitwisenot(self, reg_a):
+        self.reg[reg_a] = ~self.reg[reg_a]
+
+    def shl(self, reg_a, operand_b):
+        self.reg[reg_a] = self.reg[reg_a] << operand_b
+        if len(bin(self.reg[reg_a])) > 10:
+            self.reg[reg_a] = list(bin(self.reg[reg_a]))[-8:]
+
+    def shr(self, reg_a, operand_b):
+        self.reg[reg_a] = self.reg[reg_a] >> (operand_b)
 
     def ram_write(self, address, value):
         self.ram[address] = value
